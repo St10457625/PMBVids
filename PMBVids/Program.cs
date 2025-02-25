@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using PMBVids.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<PMBVidsContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PMBVidsContext") ?? throw new InvalidOperationException("Connection string 'PMBVidsContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
