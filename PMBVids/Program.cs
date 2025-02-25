@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using PMBVids.Models;
 using PMBVids.Data;
+using PMBVids.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PMBVidsContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PMBVidsContext") ?? throw new InvalidOperationException("Connection string 'PMBVidsContext' not found.")));
@@ -9,6 +11,13 @@ builder.Services.AddDbContext<PMBVidsContext>(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
